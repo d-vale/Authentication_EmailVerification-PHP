@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($password, PASSWORD_DEFAULT);
     $token = bin2hex(random_bytes(32));
 
-    $utilisateur = new Utilisateur($prenom, $nom, $email, $noTel, $password, $token, $verify = false);
+    $utilisateur = new Utilisateur($prenom, $nom, $email, $noTel, $password, $token, false);
     $dbManager = new DbManagerCRUD();
     $dbManager->creeTableUtilisateur();
     $dbManager->ajouteUtilisateur($utilisateur);

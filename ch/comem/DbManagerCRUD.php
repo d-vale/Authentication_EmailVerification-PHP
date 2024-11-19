@@ -2,12 +2,6 @@
 
 namespace ch\comem;
 
-require_once './lib/vendor/autoload.php';
-
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
-
 class DbManagerCRUD implements I_ApiCRUD
 {
 
@@ -70,7 +64,7 @@ COMMANDE_SQL;
         echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
 
         //Envoie du mail de vérification du mail avec le token personnalisé dans le lien
-        include('mail/mailSending.php');
+        include('MailSender_Manager.php');
 
         return $this->db->lastInsertId();
     }
@@ -140,6 +134,29 @@ COMMANDE_SQL;
             }
         } else {
             echo '<p style="color: red" class="mt-3 text-center">Email ou mot de passe incorrect</p>';
+        }
+    }
+
+    //Fonction pour vérifier le token de l'utilisateur
+    public function verifyToken(string $token): void
+    {
+        $sql = "SELECT * FROM utilisateurs WHERE token = :token";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindParam(':token', $token);
+
+        if ($stmt->execute()) {
+            $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+            if ($result) {
+                $sql = "UPDATE utilisateurs SET verify = 1 WHERE token = :token";
+                $stmt = $this->db->prepare($sql);
+                $stmt->bindParam(':token', $token);
+                $stmt->execute();
+                echo '<p style="color: green" class="mt-3 text-center">Email vérifié</p>';
+            } else {
+                echo '<p style="color: red" class="mt-3 text-center">Erreur de vérification</p>';
+            }
+        } else {
+            echo '<p style="color: red" class="mt-3 text-center">Erreur de vérification</p>';
         }
     }
 }
