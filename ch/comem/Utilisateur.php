@@ -52,9 +52,6 @@ class Utilisateur {
         if (empty($token)) {
             throw new Exception('Erreur dans la génération du token');
         }
-        if (empty($verify)) {
-            throw new Exception('Vérification non définie');
-        }
         if ($id < 0) {
             throw new Exception('Il faut un id valide');
         }

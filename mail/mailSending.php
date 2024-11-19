@@ -1,13 +1,5 @@
 <?php
-/* Ce script permet d'envoyer un mail sur le serveur mail : MailHog en local
-Maintenant que tout est prêt, il faut lancer le serveur de messagerie mailhog
-Démarrage du serveur de messagerie
-Windows :
-Lancer l'exécution du fichier : MailHog_windows_386.exe
-MacOs :
-En ligne de commande (terminal)
-Remarque : Pour que cela fonctionne, il faut avoir démarré le serveur ;-)
-Libraire permettant l'envoi de mail (Symfony Mailer) */
+
 require_once './lib/vendor/autoload.php';
 
 use Symfony\Component\Mailer\Transport;
@@ -17,19 +9,18 @@ use Symfony\Component\Mime\Email;
 $transport = Transport::fromDsn('smtp://localhost:1025');
 $mailer = new Mailer($transport);
 $email = (new Email())
-    ->from('dominique.martin@heig-vd.ch')
-    ->to('daniel.pintovale@heig-vd.ch')
-    //->cc('cc@exemple.com')
-    //->bcc('bcc@exemple.com')
-    //->replyTo('replyto@exemple.com')
-    //->priority(Email::PRIORITY_HIGH)
-    ->subject('Concerne : Envoi de mail')
-    ->text('Un peu de texte')
-    ->html('<h1>Un peu de html</h1>');
+    ->from('danielvale@noreply.ch')
+    ->to($utilisateur->rendEmail())
+    ->subject('Vérification de votre compte')
+    ->html('<h1>Merci de vérifier votre compte</h1>
+            <a href="http://localhost/ProgServ2/ExerciceVerifMail/mail/verify.php?token='
+            . $utilisateur->rendToken()
+            . '">Cliquez ici pour vérifier votre compte</a>');
 $result = $mailer->send($email);
+
+//Verification de l'envoi du mail
 if ($result == null) {
-    echo "Un mail a été envoyé ! <a href='http://localhost:8025'>voir le
-mail</a>";
+    echo '<p class="mt-3 text-center">Un mail de vérification a été envoyé</p>';
 } else {
-    echo "Un problème lors de l'envoi du mail est survenu";
+    echo '<p style="color: red" class="mt-3 text-center">Le mail de vérification ne peux pas être envoyé</p>';
 }

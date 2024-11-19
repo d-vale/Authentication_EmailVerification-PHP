@@ -2,6 +2,12 @@
 
 namespace ch\comem;
 
+require_once './lib/vendor/autoload.php';
+
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
+use Symfony\Component\Mime\Email;
+
 class DbManagerCRUD implements I_ApiCRUD
 {
 
@@ -48,6 +54,7 @@ COMMANDE_SQL;
     //Fonction pour ajouter un utilisateur
     public function ajouteUtilisateur(Utilisateur $utilisateur): int
     {
+        //Ajoute l'utilisateur dans la base de données
         $datas = [
             'nom' => $utilisateur->rendNom(),
             'prenom' => $utilisateur->rendPrenom(),
@@ -61,6 +68,10 @@ COMMANDE_SQL;
             . "(:nom, :prenom, :email, :noTel, :password, :token, :verify);";
         $this->db->prepare($sql)->execute($datas);
         echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
+
+        //Envoie du mail de vérification du mail avec le token personnalisé dans le lien
+        include('mail/mailSending.php');
+
         return $this->db->lastInsertId();
     }
 
@@ -102,7 +113,8 @@ COMMANDE_SQL;
     }
 
     //Fonction pour vérifier le login d'un utilisateur
-    public function loginUtilisateur(): void{
+    public function loginUtilisateur(): void
+    {
         $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
         $password = $_POST['password'];
 
