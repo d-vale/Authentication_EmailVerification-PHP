@@ -77,8 +77,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $noTel = filter_input(INPUT_POST, 'noTel', FILTER_VALIDATE_REGEXP, ["options" => ["regexp" => "/^(\+41|0041|0){1}([1-9]{1}[0-9]{1})[0-9]{3}[0-9]{2}[0-9]{2}$/"]]);
     $password = $_POST['password'];
     $password = password_hash($password, PASSWORD_DEFAULT);
+    $token = bin2hex(random_bytes(32));
 
-    $utilisateur = new Utilisateur($prenom, $nom, $email, $noTel, $password);
+    $utilisateur = new Utilisateur($prenom, $nom, $email, $noTel, $password, $token, $verify = false);
     $dbManager = new DbManagerCRUD();
     $dbManager->creeTableUtilisateur();
     $dbManager->ajouteUtilisateur($utilisateur);

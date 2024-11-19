@@ -21,6 +21,8 @@ class Utilisateur {
     private $email;
     private $noTel;
     private $password;
+    private $token;
+    private $verify;
 
     /**
      * Construit une nouvelle personne avec les paramètres spécifiés
@@ -31,7 +33,7 @@ class Utilisateur {
      * @param string $id Identifiant de la personne
      * @throws Exception Lance une expection si un des paramètres n'est pas spécifié
      */
-    public function __construct(string $prenom, string $nom, string $email, string $noTel, string $password, int $id = 0) {
+    public function __construct(string $prenom, string $nom, string $email, string $noTel, string $password, string $token, bool $verify, int $id = 0) {
         if (empty($prenom)) {
             throw new Exception('Il faut un prénom');
         }
@@ -47,6 +49,12 @@ class Utilisateur {
         if (empty($password)) {
             throw new Exception('Il faut un mot de passe');
         }
+        if (empty($token)) {
+            throw new Exception('Erreur dans la génération du token');
+        }
+        if (empty($verify)) {
+            throw new Exception('Vérification non définie');
+        }
         if ($id < 0) {
             throw new Exception('Il faut un id valide');
         }
@@ -56,6 +64,8 @@ class Utilisateur {
         $this->email = $email;
         $this->noTel = $noTel;
         $this->password = $password;
+        $this->token = $token;
+        $this->verify = $verify;
         $this->id = $id;
     }
 
@@ -109,6 +119,20 @@ class Utilisateur {
      */
     public function rendPassword(): string {
         return $this->password;
+    }
+
+    /**
+     * Rend le token
+     */
+    public function rendToken(): string {
+        return $this->token;
+    }
+
+    /**
+     * Rend le verify
+     */
+    public function rendVerify(): bool {
+        return $this->verify;
     }
 
     /**

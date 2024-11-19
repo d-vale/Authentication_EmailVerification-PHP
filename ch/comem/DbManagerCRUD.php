@@ -29,7 +29,9 @@ class DbManagerCRUD implements I_ApiCRUD
                 prenom VARCHAR(120) NOT NULL,
                 email VARCHAR(120) NOT NULL UNIQUE,
                 noTel VARCHAR(20) NOT NULL UNIQUE,
-                password VARCHAR(900) NOT NULL
+                password VARCHAR(900) NOT NULL,
+                token VARCHAR(900) NOT NULL,
+                verify BOOLEAN NOT NULL
             );
 COMMANDE_SQL;
 
@@ -52,9 +54,11 @@ COMMANDE_SQL;
             'email' => $utilisateur->rendEmail(),
             'noTel' => $utilisateur->rendNoTel(),
             'password' => $utilisateur->rendPassword(),
+            'token' => $utilisateur->rendToken(),
+            'verify' => $utilisateur->rendVerify(),
         ];
-        $sql = "INSERT INTO utilisateurs (nom, prenom, email, noTel, password) VALUES "
-            . "(:nom, :prenom, :email, :noTel, :password);";
+        $sql = "INSERT INTO utilisateurs (nom, prenom, email, noTel, password, token, verify) VALUES "
+            . "(:nom, :prenom, :email, :noTel, :password, :token, :verify);";
         $this->db->prepare($sql)->execute($datas);
         echo '<p style="color: green" class="mt-3 text-center">Utilisateur ajouté</p>';
         return $this->db->lastInsertId();
@@ -78,6 +82,8 @@ COMMANDE_SQL;
                     $donneesUtilisateur["noTel"],
                     $donneesUtilisateur["id"],
                     $donneesUtilisateur["password"],
+                    $donneesUtilisateur["token"],
+                    $donneesUtilisateur["verify"]
                 );
                 $tabUtilisateurs[] = $p;
             }
