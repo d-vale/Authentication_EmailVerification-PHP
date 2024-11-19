@@ -120,7 +120,7 @@ COMMANDE_SQL;
 
             if ($stmt->execute()) {
                 $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-                if ($result && password_verify($password, $result['password'])) {
+                if ($result && password_verify($password, $result['password']) && $result['verify'] == 1) {
                     session_start();
                     $_SESSION['email'] = $email;
                     $_SESSION['prenom'] = $result['prenom'];
