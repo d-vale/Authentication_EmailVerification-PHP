@@ -8,5 +8,4 @@ interface I_ApiCRUD
     public function ajouteUtilisateur(Utilisateur $utilisateur): int;
     public function rendUtilisateur(string $nom): array;
     public function supprimeUtilisateur(int $id): bool;
-    public function loginUtilisateur(): void;
 }
